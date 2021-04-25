@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 const PORT = 3001;
 
 let persons = [
@@ -66,6 +68,18 @@ app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     persons = persons.filter(person => person.id !== id)
     response.status(204).end()
+})
+
+//Insertar elemento
+app.post('/api/persons', (request, response) => {
+    const id = Math.floor(Math.random() * 10000);
+    const person = {
+        id: id,
+        name: request.body.name,
+        number: request.body.number
+    }
+    persons.push(person)
+    response.json(person)
 })
 
 app.listen(PORT, () => {
