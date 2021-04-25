@@ -1,6 +1,7 @@
-const http = require('http');
+const express = require('express')
+const app = express()
 
-const port = 3001;
+const PORT = 3001;
 
 let persons = [
     {
@@ -30,14 +31,14 @@ let persons = [
     }
 ]
 
-const server = http.createServer((request, response) => {
-  response.statusCode = 200;
-  response.setHeader('Content-Type', 'application/json');
-  response.end(JSON.stringify(persons));
-});
+app.get('/', (request, response) => {
+    response.send('<h1>Hello World!</h1>')
+})
 
-/*server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});*/
-server.listen(port)
-console.log(`Server running at port ${port}`);
+app.get('/api/persons', (request, response) => {
+    response.json(persons)
+})
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+})
