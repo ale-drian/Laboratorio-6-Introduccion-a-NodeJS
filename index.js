@@ -35,16 +35,30 @@ app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
 })
 
+//Obtener la lista de personas
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
 
+//Vista info
 app.get('/info', (request, response) => {
     const fecha = new Date();
-    return response.send(`<div>
-                            <p>Phonebook has info for ${persons.length} people</p>
-                            <p>${fecha}</p>
-                        </div>`)
+    response.send(`<div>
+                        <p>Phonebook has info for ${persons.length} people</p>
+                        <p>${fecha}</p>
+                    </div>`)
+})
+
+//Obtener un solo elemento de la lista de personas
+app.get('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const person = persons.find(person => person.id.toString() === id)
+    if (person) {
+        response.json(person)
+    } else {
+        response.status(404).end(`<h1>Error 404 Not Found</h1>
+                                <p>ID undefinided</p>`)
+    }
 })
 
 app.listen(PORT, () => {
