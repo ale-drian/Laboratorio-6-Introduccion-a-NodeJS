@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { request, response } from 'express';
 
 const app = express();
 
@@ -33,6 +33,12 @@ let persons = [
     number: '123-1234'
   }
 ];
+
+// midleware
+app.use((request, response, next) => {
+  console.log('Estoy en el primer midelware');
+  next();
+});
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>');
@@ -94,6 +100,12 @@ app.post('/api/persons', (request, response) => {
       response.json(persons);
     }
   }
+});
+
+// midleware
+app.use((request, response, next) => {
+  console.log('Pagina de error');
+  response.status(404).send('<h2>Pagina de errores</h2>');
 });
 
 app.listen(PORT, () => {
