@@ -1,38 +1,14 @@
-import express, { request, response } from 'express'
+import express from 'express'
+import persons from './utils/mockup'
+import MongoDB from './lib/mongo'
+
+const mongo = new MongoDB()
 
 const app = express()
 
 app.use(express.json())
 
 const PORT = process.env.PORT
-
-let persons = [
-  {
-    id: 1,
-    name: 'Arto Hellas',
-    number: '040-1234'
-  },
-  {
-    id: 2,
-    name: 'Mary Hellas',
-    number: '51-1234'
-  },
-  {
-    id: 3,
-    name: 'Nora Jules',
-    number: '040-6547'
-  },
-  {
-    id: 4,
-    name: 'Juan Males',
-    number: '041-2020'
-  },
-  {
-    id: 5,
-    name: 'Lola Ruiz',
-    number: '123-1234'
-  }
-]
 
 // midleware
 app.use((request, response, next) => {
@@ -72,8 +48,8 @@ app.get('/api/persons/:id', (request, response) => {
 
 // Eliminar un elemento
 app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
+  // const id = Number(request.params.id)
+  // persons = persons.filter(person => person.id !== id)
   response.status(204).end()
 })
 
@@ -90,13 +66,11 @@ app.post('/api/persons', (request, response) => {
         error: 'Unprocessable Entity - Unique name violation'
       })
     } else {
-      const id = Math.floor(Math.random() * 10000)
       const person = {
-        id: id,
         name: request.body.name,
         number: request.body.number
       }
-      persons.push(person)
+      mongo.create(person)
       response.json(persons)
     }
   }

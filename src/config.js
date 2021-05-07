@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-export const config = {
+const config = {
   dev: process.env.NODE_ENV !== 'production',
   port: process.env.PORT || 3000,
   // cors: process.env.CORS,
@@ -15,3 +15,5 @@ export const config = {
   }
   // authJwtSecret: process.env.AUTH_JWT_SECRET
 }
+
+export default config

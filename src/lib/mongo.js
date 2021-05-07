@@ -1,6 +1,6 @@
 import mongoDriver from 'mongodb'
-const { MongoClient, ObjectId } = require('mongodb')
-const { config } = require('../config')
+import config from '../config'
+const { MongoClient, ObjectId } = mongoDriver
 
 const MONGO_URI = config.mongo.uri
 const MONGO_DB = config.mongo.db
