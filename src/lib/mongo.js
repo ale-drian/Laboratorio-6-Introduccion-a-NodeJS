@@ -1,16 +1,16 @@
-import mongoDriver from 'mongodb';
-const { MongoClient, ObjectId } = require('mongodb');
-const { config } = require('../config');
+import mongoDriver from 'mongodb'
+const { MongoClient, ObjectId } = require('mongodb')
+const { config } = require('../config')
 
-const MONGO_URI = config.mongo.uri;
-const MONGO_DB = config.mongo.db;
+const MONGO_URI = config.mongo.uri
+const MONGO_DB = config.mongo.db
 
 class MongoLib {
   constructor () {
     this.client = new MongoClient(MONGO_URI, {
       useUnifiedTopology: true
-    });
-    this.dbName = MONGO_DB;
+    })
+    this.dbName = MONGO_DB
   }
 
   /**
@@ -30,37 +30,37 @@ class MongoLib {
       })
     }
 
-    return MongoLib.connection;
+    return MongoLib.connection
   }
 
   async getAll (collection, query) {
-    const db = await this.connect();
-    return db.collection(collection).find(query).toArray();
+    const db = await this.connect()
+    return db.collection(collection).find(query).toArray()
   }
 
   async get (collection, id, query = null) {
-    const db = await this.connect();
-    query = query || { _id: ObjectId(id) };
-    return db.collection(collection).findOne(query);
+    const db = await this.connect()
+    query = query || { _id: ObjectId(id) }
+    return db.collection(collection).findOne(query)
   }
 
   async create (collection, data) {
-    const db = await this.connect();
-    const result = await db.collection(collection).insertOne(data);
-    return result.insertedId;
+    const db = await this.connect()
+    const result = await db.collection(collection).insertOne(data)
+    return result.insertedId
   }
 
   async update (collection, id, data) {
-    const db = await this.connect();
-    const result = db.collection(collection).updateOne({ _id: ObjectId(id) }, { $set: data }, { upsert: true });
-    return result.upsertedId || id;
+    const db = await this.connect()
+    const result = db.collection(collection).updateOne({ _id: ObjectId(id) }, { $set: data }, { upsert: true })
+    return result.upsertedId || id
   }
 
   async delete (collection, id) {
-    const db = await this.connect();
-    await db.collection(collection).deleteOne({ _id: ObjectId(id) });
-    return id;
+    const db = await this.connect()
+    await db.collection(collection).deleteOne({ _id: ObjectId(id) })
+    return id
   }
 }
 
-export default MongoLib;
+export default MongoLib

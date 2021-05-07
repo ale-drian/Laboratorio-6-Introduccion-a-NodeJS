@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import dotenv from 'dotenv'
+dotenv.config()
 
 export const config = {
   dev: process.env.NODE_ENV !== 'production',
@@ -14,5 +14,4 @@ export const config = {
     db: process.env.MONGO_DB
   }
   // authJwtSecret: process.env.AUTH_JWT_SECRET
-};
-
+}

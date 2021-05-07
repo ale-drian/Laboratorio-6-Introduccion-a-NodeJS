@@ -1,10 +1,10 @@
-import express, { request, response } from 'express';
+import express, { request, response } from 'express'
 
-const app = express();
+const app = express()
 
-app.use(express.json());
+app.use(express.json())
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT
 
 let persons = [
   {
@@ -32,82 +32,82 @@ let persons = [
     name: 'Lola Ruiz',
     number: '123-1234'
   }
-];
+]
 
 // midleware
 app.use((request, response, next) => {
-  console.log('Estoy en el primer midelware');
-  next();
-});
+  console.log('Estoy en el primer midelware')
+  next()
+})
 
 app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>');
-});
+  response.send('<h1>Hello World!</h1>')
+})
 
 // Obtener la lista de personas
 app.get('/api/persons', (request, response) => {
-  response.json(persons);
-});
+  response.json(persons)
+})
 
 // Vista info
 app.get('/info', (request, response) => {
-  const fecha = new Date();
+  const fecha = new Date()
   response.send(`<div>
                         <p>Phonebook has info for ${persons.length} people</p>
                         <p>${fecha}</p>
-                    </div>`);
-});
+                    </div>`)
+})
 
 // Obtener un solo elemento de la lista de personas
 app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id;
-  const person = persons.find(person => person.id.toString() === id);
+  const id = request.params.id
+  const person = persons.find(person => person.id.toString() === id)
   if (person) {
-    response.json(person);
+    response.json(person)
   } else {
     response.status(404).end(`<h1>Error 404 Not Found</h1>
-                                <p>ID undefinided</p>`);
+                                <p>ID undefinided</p>`)
   }
-});
+})
 
 // Eliminar un elemento
 app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
-  persons = persons.filter(person => person.id !== id);
-  response.status(204).end();
-});
+  const id = Number(request.params.id)
+  persons = persons.filter(person => person.id !== id)
+  response.status(204).end()
+})
 
 // Insertar elemento
 app.post('/api/persons', (request, response) => {
   if (!request.body.name || !request.body.number) {
     return response.status(400).json({
       error: 'Missing name or number'
-    });
+    })
   } else {
-    const noUniqueName = persons.find(person => person.name == request.body.name);
+    const noUniqueName = persons.find(person => person.name == request.body.name)
     if (noUniqueName) {
       return response.status(422).json({
         error: 'Unprocessable Entity - Unique name violation'
-      });
+      })
     } else {
-      const id = Math.floor(Math.random() * 10000);
+      const id = Math.floor(Math.random() * 10000)
       const person = {
         id: id,
         name: request.body.name,
         number: request.body.number
-      };
-      persons.push(person);
-      response.json(persons);
+      }
+      persons.push(person)
+      response.json(persons)
     }
   }
-});
+})
 
 // midleware
 app.use((request, response, next) => {
-  console.log('Pagina de error');
-  response.status(404).send('<h2>Pagina de errores</h2>');
-});
+  console.log('Pagina de error')
+  response.status(404).send('<h2>Pagina de errores</h2>')
+})
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  console.log(`Server running on port ${PORT}`)
+})
