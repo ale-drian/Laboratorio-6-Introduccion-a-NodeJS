@@ -1,3 +1,4 @@
+import mongoDriver from 'mongodb';
 const { MongoClient, ObjectId } = require('mongodb');
 const { config } = require('../config');
 
@@ -17,26 +18,17 @@ class MongoLib {
    */
   async connect () {
     if (!MongoLib.connection) {
-      MongoLib.connection = (async () => {
-        await this.client.connect();
-        console.log('connected succesfully to mongo');
-        return this.client.db(this.dbName);
-      })(); // return a promise execution to all dependent wait one time
+      MongoLib.connection = new Promise((resolve, reject) => {
+        console.log('executing promise')
+        this.client.connect(err => {
+          if (err) {
+            reject(err)
+          }
+          console.log('Connected succesfully to mongo')
+          resolve(this.client.db(this.dbName))
+        })
+      })
     }
-
-    // its the same above but using promises
-    // if (!MongoLib.connection) {
-    //   MongoLib.connection = new Promise((resolve, reject) => {
-    //     console.log('executing promise')
-    //     this.client.connect(err => {
-    //       if (err) {
-    //         reject(err)
-    //       }
-    //       console.log('Connected succesfully to mongo')
-    //       resolve(this.client.db(this.dbName))
-    //     })
-    //   })
-    // }
 
     return MongoLib.connection;
   }
