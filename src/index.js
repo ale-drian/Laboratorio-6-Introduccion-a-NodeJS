@@ -20,12 +20,6 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
 
-// Obtener la lista de personas
-app.get('/api/persons', async (request, response) => {
-  const datos = await mongo.getAll('personas', {})
-  response.json(datos)
-})
-
 // Vista info
 app.get('/info', (request, response) => {
   const fecha = new Date()
@@ -35,10 +29,16 @@ app.get('/info', (request, response) => {
                     </div>`)
 })
 
+// Obtener la lista de personas
+app.get('/api/persons', async (request, response) => {
+  const datos = await mongo.getAll('personas', {})
+  response.json(datos)
+})
+
 // Obtener un solo elemento de la lista de personas
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', async (request, response) => {
   const id = request.params.id
-  const person = persons.find(person => person.id.toString() === id)
+  const person = await mongo.get('personas', id)
   if (person) {
     response.json(person)
   } else {
@@ -48,10 +48,10 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 // Eliminar un elemento
-app.delete('/api/persons/:id', (request, response) => {
-  // const id = Number(request.params.id)
-  // persons = persons.filter(person => person.id !== id)
-  response.status(204).end()
+app.delete('/api/persons/:id', async (request, response) => {
+  const id = request.params.id
+  await mongo.delete('personas', id)
+  response.status(204).send('Eliminado')
 })
 
 // Insertar elemento
