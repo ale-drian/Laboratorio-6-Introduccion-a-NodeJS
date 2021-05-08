@@ -1,14 +1,8 @@
 import express from 'express'
-import persons from './utils/mockup'
-import MongoDB from './lib/mongo'
-
-const mongo = new MongoDB()
-
+import personRouter from './routes/persons'
 const app = express()
 
 app.use(express.json())
-
-const PORT = process.env.PORT
 
 // midleware
 app.use((request, response, next) => {
@@ -16,72 +10,15 @@ app.use((request, response, next) => {
   next()
 })
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
-
-// Vista info
-app.get('/info', (request, response) => {
-  const fecha = new Date()
-  response.send(`<div>
-                        <p>Phonebook has info for ${persons.length} people</p>
-                        <p>${fecha}</p>
-                    </div>`)
-})
-
-// Obtener la lista de personas
-app.get('/api/persons', async (request, response) => {
-  const datos = await mongo.getAll('personas', {})
-  response.json(datos)
-})
-
-// Obtener un solo elemento de la lista de personas
-app.get('/api/persons/:id', async (request, response) => {
-  const id = request.params.id
-  const person = await mongo.get('personas', id)
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end(`<h1>Error 404 Not Found</h1>
-                                <p>ID undefinided</p>`)
-  }
-})
-
-// Eliminar un elemento
-app.delete('/api/persons/:id', async (request, response) => {
-  const id = request.params.id
-  await mongo.delete('personas', id)
-  response.status(204).end()
-})
-
-// Insertar elemento
-app.post('/api/persons', async (request, response) => {
-  if (!request.body.name || !request.body.number) {
-    return response.status(400).json({
-      error: 'Missing name or number'
-    })
-  } else {
-    const noUniqueName = persons.find(person => person.name == request.body.name)
-    if (noUniqueName) {
-      return response.status(422).json({
-        error: 'Unprocessable Entity - Unique name violation'
-      })
-    } else {
-      const person = {
-        name: request.body.name,
-        number: request.body.number
-      }
-      await mongo.create('personas', person)
-      response.status(201).json(person)
-    }
-  }
-})
+app.use('/', personRouter)
 
 // midleware
 app.use((request, response, next) => {
   console.log('Pagina de error')
   response.status(404).send('<h2>Pagina de errores</h2>')
 })
+
+const PORT = process.env.PORT
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
