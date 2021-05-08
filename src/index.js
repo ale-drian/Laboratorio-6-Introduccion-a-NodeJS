@@ -21,8 +21,9 @@ app.get('/', (request, response) => {
 })
 
 // Obtener la lista de personas
-app.get('/api/persons', (request, response) => {
-  response.json(persons)
+app.get('/api/persons', async (request, response) => {
+  const datos = await mongo.getAll('personas', {})
+  response.json(datos)
 })
 
 // Vista info
