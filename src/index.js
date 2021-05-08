@@ -54,7 +54,7 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 // Insertar elemento
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', async (request, response) => {
   if (!request.body.name || !request.body.number) {
     return response.status(400).json({
       error: 'Missing name or number'
@@ -70,8 +70,8 @@ app.post('/api/persons', (request, response) => {
         name: request.body.name,
         number: request.body.number
       }
-      mongo.create(person)
-      response.json(persons)
+      await mongo.create('personas', person)
+      response.status(201).json(person)
     }
   }
 })
