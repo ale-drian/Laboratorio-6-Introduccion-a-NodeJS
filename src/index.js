@@ -51,7 +51,7 @@ app.get('/api/persons/:id', async (request, response) => {
 app.delete('/api/persons/:id', async (request, response) => {
   const id = request.params.id
   await mongo.delete('personas', id)
-  response.status(204).send('Eliminado')
+  response.status(204).end()
 })
 
 // Insertar elemento
