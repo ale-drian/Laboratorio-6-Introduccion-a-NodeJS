@@ -1,4 +1,5 @@
 import express from 'express'
+import { getPhonebook } from '../components/personas/controller'
 import MongoDB from '../lib/mongo'
 import persons from '../utils/mockup'
 
@@ -19,10 +20,7 @@ router.get('/info', (request, response) => {
 })
 
 // Obtener la lista de personas
-router.get('/api/persons', async (request, response) => {
-  const datos = await mongo.getAll('personas', {})
-  response.json(datos)
-})
+router.get('/api/persons', getPhonebook)
 
 // Obtener un solo elemento de la lista de personas
 router.get('/api/persons/:id', async (request, response) => {
